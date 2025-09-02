@@ -39,16 +39,22 @@ $$
 I(t_n \to t_{n+1}) = \int_{t_n}^{t_{n+1}} T(t)\sigma_n C_n \, dt 
 = \sigma_n C_n \int_{t_n}^{t_{n+1}} T(t) \, dt
 $$
+
 其中
+
 $$
 T(t) = \exp\!\left(-\int_{0}^{t} \sigma(u)\,du \right),
 $$
+
 这里是0到t的积分，为了去掉tn前的积分，将T(t)写为
+
 $$
 T(t) = \exp\!\left(-\Bigg[\int_{0}^{t_n} \sigma(u)\,du + \int_{t_n}^{t} \sigma(u)\,du \Bigg]\right)
 = T(0 \to t_n)\, T(t_n \to t)
 $$ 
+
 也就得到
+
 $$
 I(t_n \to t_{n+1})
 = \sigma_n C_n T(0 \to t_n) \int_{t_n}^{t_{n+1}} T(t_n \to t)\, dt
@@ -58,6 +64,7 @@ $$
 = \sigma_n C_n T(0 \to t_n) \int_{t_n}^{t_{n+1}} 
 \exp\!\big(-\sigma_n u|_{t_n}^{t} \big)\, dt, 这一段\sigma_n与u无关
 $$
+
 假设  $v = t - t_n,  dv = dt$ 积分上下限为$ v= 0 \to (t_{n+1} - t_n) $，于是：
 
 
