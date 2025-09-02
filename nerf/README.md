@@ -150,7 +150,7 @@ https://yconquesty.github.io/blog/ml/nerf/nerf_ndc.html
 点落在z=-near平面上，做完齐次除法后的xy要与之前xy相同  
 
 $$
-x^`=(n^` x)/z,y^`=(n^` y)/z
+x^{\prime}=(n^{\prime} x)/z,y^{\prime}=(n^{\prime} y)/z
 $$
 
 假设矩阵第三行为 $[0,0,\gamma,\delta]$，则有
@@ -303,6 +303,7 @@ $$
 ![ndc perp](md_images/render_rays4.png)  
 
 首先，给MLP输出的volume density加上noise，
+
 $$
 \sigma_i^b = \mathrm{relu}\left(\sigma_{\text{raw},i}^b + \mu[0,1]\right) 
 $$
