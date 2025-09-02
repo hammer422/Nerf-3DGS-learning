@@ -136,7 +136,7 @@ def get_rays_np(
 
 class Config:
     basedir = Path("./")
-    datadir = Path("./colmapresult")
+    datadir = Path("../../colmapresult2333")
     expname = "logs"
 
     factor = None
@@ -178,7 +178,7 @@ class Config:
 
     lrate_decay = 250
 
-    i_testset = 100 # 50000
+    i_testset = 50000 # 50000
     i_print = 100
 
 
@@ -384,6 +384,9 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     factor = 1
 
     imgfiles = list((basedir / "images").glob("*"))
+    imgfiles = list(sorted(
+        imgfiles, key=lambda x: int(str(x.stem).split("_")[1])
+    ))
     if poses.shape[-1] != len(imgfiles):
         print( 'Mismatch between imgs {} and poses {} !!!!'.format(len(imgfiles), poses.shape[-1]) )
         return
