@@ -35,6 +35,7 @@ https://arxiv.org/pdf/2209.02417
 https://zhuanlan.zhihu.com/p/595117334    
 ![T(t)](md_images/bg_3.png)  
 积分肯定是无法直接使用的，必须离散化。把整条光路[0, s]（也就是t_near, t_far），划分为N个等距的区间，区间内的  
+
 $$
 I(t_n \to t_{n+1}) = \int_{t_n}^{t_{n+1}} T(t)\sigma_n C_n \, dt 
 = \sigma_n C_n \int_{t_n}^{t_{n+1}} T(t) \, dt
@@ -43,7 +44,7 @@ $$
 其中
 
 $$
-T(t) = \exp\!\left(-\int_{0}^{t} \sigma(u)\,du \right),
+T(t) = \exp\left(-\int_{0}^{t} \sigma(u)\,du \right),
 $$
 
 这里是0到t的积分，为了去掉tn前的积分，将T(t)写为
@@ -65,7 +66,7 @@ $$
 \exp\!\big(-\sigma_n u|_{t_n}^{t} \big)\, dt, 这一段\sigma_n与u无关
 $$
 
-假设  $v = t - t_n,  dv = dt$ 积分上下限为$ v= 0 \to (t_{n+1} - t_n) $，于是：
+假设  $v = t - t_n,  dv = dt$ 积分上下限为 $v= 0 \to (t_{n+1} - t_n)$   ，于是：
 
 
 $$
@@ -83,6 +84,7 @@ $$
 $$
 
 代入回总的公式
+
 $$
 I(s) = \int_{0}^{s} T(t)\,\sigma(t)\,C(t)\,dt \;+\; T(s)I_0
 $$
@@ -146,11 +148,12 @@ https://yconquesty.github.io/blog/ml/nerf/nerf_ndc.html
 上面透视变换矩阵，把相机坐标系下的点xyz（原本是透视变换）映射到了一个正交体  
 上面透视变换矩阵怎么来的？首先第四行是为了要求后续做齐次除法时，分母时原来的z  
 点落在z=-near平面上，做完齐次除法后的xy要与之前xy相同  
+
 $$
 x^`=(n^` x)/z,y^`=(n^` y)/z
 $$
 
-假设矩阵第三行为 $$ [0,0,\gamma,\delta]$$，则有
+假设矩阵第三行为 $[0,0,\gamma,\delta]$，则有
 
 $$
 (x', y', z', w')^T = (n x, n y, \gamma z + \delta, z)^T
@@ -162,20 +165,21 @@ $$
 z' = \frac{\gamma z + \delta}{z}
 $$
 
-为了把透视视锥变成平行六面体，代入 $$z = -\text{near} 和 \text{far}$$
+为了把透视视锥变成平行六面体，代入 $z = -\text{near} 和 \text{far}$
 
 $$
-\gamma + \frac{\delta}{-n^`} = -n^`, 
+\gamma + \frac{\delta}{-n^{\prime}} = -n^{\prime}, 
 \quad
-\gamma + \frac{\delta}{-f^`} = -f^`
+\gamma + \frac{\delta}{-f^{\prime}} = -f^{\prime}
 $$
+
 
 解得：
 
 $$
-\gamma = n^` + f^`, 
+\gamma = n^{\prime} + f^{\prime}, 
 \quad 
-\delta = -n^` f^`
+\delta = -n^{\prime} f^{\prime}
 $$
 
 ![ndc perp](md_images/ndc_perp2.png)   
@@ -205,12 +209,13 @@ NDC是OPENGL坐标系，也即y向上，x向右，z沿着camera向外，为了�
 $$
 M_{\text{per, opencv}} =
 \begin{bmatrix}
-\dfrac{n}{r} & 0 & 0 & 0 \\[6pt]
-0 & -\dfrac{n}{t} & 0 & 0 \\[6pt]
-0 & 0 & \dfrac{f+n}{f-n} & -\dfrac{2fn}{f-n} \\[6pt]
+\frac{n}{r} & 0 & 0 & 0 \\
+0 & -\frac{n}{t} & 0 & 0 \\
+0 & 0 & \frac{f+n}{f-n} & -\frac{2fn}{f-n} \\
 0 & 0 & 1 & 0
 \end{bmatrix}
 $$
+
 
 简单验证下，当z=n时，z_ndc=-1, 当z=f时，z_ndc=1  
 
@@ -218,24 +223,24 @@ $$
 M_{\text{per,opencv}}
 \begin{bmatrix}
 x \\ y \\ z \\ 1
-\end{bmatrix}
-=
+\end{bmatrix} =
 \begin{bmatrix}
-\dfrac{n}{r}x \\[6pt]
--\dfrac{n}{t}y \\[6pt]
-\dfrac{f+n}{f-n}z - \dfrac{2fn}{f-n} \\[6pt]
+\dfrac{n}{r}x \\
+-\dfrac{n}{t}y \\
+\dfrac{f+n}{f-n}z - \dfrac{2fn}{f-n} \\
 z
 \end{bmatrix}
 $$
 
 
+
 投影结果：
 
 $$
-\text{project} \;\to\;
+\text{project} \to
 \left(
-\dfrac{n}{r}\dfrac{x}{z},\;
--\dfrac{n}{t}\dfrac{y}{z},\;
+\dfrac{n}{r}\dfrac{x}{z},
+-\dfrac{n}{t}\dfrac{y}{z},
 \dfrac{f+n}{f-n} - \dfrac{2fn}{(f-n)z}
 \right)
 $$
@@ -244,18 +249,18 @@ $$
 
 $$
 O = \left(
-\dfrac{f_{\text{cam}}}{W/2}\dfrac{x}{z},\;
--\dfrac{f_{\text{cam}}}{H/2}\dfrac{y}{z},\;
+\dfrac{f_{\text{cam}}}{W/2}\dfrac{x}{z},
+-\dfrac{f_{\text{cam}}}{H/2}\dfrac{y}{z},
 1 - \dfrac{2n}{z}
 \right)
 $$
 
 $$
 d = \left(
-\dfrac{f_{\text{cam}}}{W/2},\;
--\dfrac{f_{\text{cam}}}{H/2},\;
-\cdots,\;
-2n,\;
+\dfrac{f_{\text{cam}}}{W/2},
+-\dfrac{f_{\text{cam}}}{H/2},
+\cdots,
+2n,
 \cdots
 \right),
 \quad \text{也可以对应推出}
@@ -268,7 +273,8 @@ $$
 
 ## 实际渲染render_rays
 https://yconquesty.github.io/blog/ml/nerf/nerf_rendering.html
-![ndc perp](md_images/render_ray0.png)  
+![ndc perp](md_images/render_ray0.png)   
+
 $$
 z = (1 - t)\, near + t \, far
 $$
@@ -297,9 +303,12 @@ $$
 ![ndc perp](md_images/render_rays4.png)  
 
 首先，给MLP输出的volume density加上noise，
-$$ \sigma_i^b = \mathrm{relu}\!\left(\sigma_{\text{raw},i}^b + \mu[0,1]\right) $$
+$$
+\sigma_i^b = \mathrm{relu}\left(\sigma_{\text{raw},i}^b + \mu[0,1]\right) 
+$$
 
 计算代码中的alpha
+
 $$
 A_{B \times N_C} = 1_{B \times N_C} - \exp \big( \sigma_{B \times N_C} * \Delta_{B \times N_C} \big)
 $$
