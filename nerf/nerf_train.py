@@ -136,7 +136,7 @@ def get_rays_np(
 
 class Config:
     basedir = Path("./")
-    datadir = Path("../../colmapresult2333")
+    datadir = Path("../../colmapresult")
     expname = "logs"
 
     factor = None
@@ -383,10 +383,9 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     assert factor is None
     factor = 1
 
-    imgfiles = list((basedir / "images").glob("*"))
-    imgfiles = list(sorted(
-        imgfiles, key=lambda x: int(str(x.stem).split("_")[1])
-    ))
+    imgdir = str(basedir / "images")
+    imgfiles = [os.path.join(imgdir, f) for f in sorted(os.listdir(imgdir)) if f.endswith('JPG') or f.endswith('jpg') or f.endswith('png')]
+
     if poses.shape[-1] != len(imgfiles):
         print( 'Mismatch between imgs {} and poses {} !!!!'.format(len(imgfiles), poses.shape[-1]) )
         return
@@ -842,11 +841,6 @@ def train():
     i_val = i_test
     i_train = np.array([i for i in np.arange(int(images.shape[0])) if
                     (i not in i_test and i not in i_val)])
-
-    if 1:
-        i_train = [1, 10, 11, 12, 13, 14, 15, 17, 18, 19, 2, 20, 21, 22, 24, 25, 26, 27, 28, 29, 3, 31, 32, 33, 34, 35, 36, 37, 39, 4, 40, 41, 42, 43, 44, 46, 47, 48, 49, 5, 50, 51, 53, 6, 7, 8, 9]
-        i_val = [0, 16, 23, 30, 38, 45, 52]
-        i_test = i_val
 
 
     print('DEFINING BOUNDS')

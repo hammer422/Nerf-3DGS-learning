@@ -1,1 +1,1 @@
-# Nerf-3DGS-learning
+# Nerf
