@@ -27,14 +27,14 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
 
-    // model.block(0,0,3,3) = Eigen::AngleAxisf(rotation_angle, Eigen::Vector3f(0,0,1));
 
     float angle = rotation_angle / 180 * MY_PI;
+    model.block(0,0,3,3) = Eigen::AngleAxisf(angle, Eigen::Vector3f(0,0,1)).toRotationMatrix();
 
-    model << std::cos(angle), -std::sin(angle), 0,0,
-            std::sin(angle), std::cos(angle), 0,0,
-            0,0,1,0,
-            0,0,0,1;
+    // model << std::cos(angle), -std::sin(angle), 0,0,
+    //         std::sin(angle), std::cos(angle), 0,0,
+    //         0,0,1,0,
+    //         0,0,0,1;
 
     return model;
 }
@@ -50,15 +50,20 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // Create the projection matrix for the given parameters.
     // Then return it.
 
+    // 转换到坐标，因为slide的推导都基于相机看向-z轴
+    // slide的n和f都是负数
+    zNear = -zNear;
+    zFar = -zFar;
+
     Eigen::Matrix4f M_persp2ortho;
     M_persp2ortho << zNear, 0,0,0,
                         0, zNear,0,0,
                         0,0,zNear+zFar, -zNear*zFar,
                         0,0,1,0;
 
-    // 假定eye_fov为fovY
+    // // 假定eye_fov为fovY
     float fovY = eye_fov / 180 * MY_PI;
-    float top = std::tan(eye_fov / 2) * std::abs(zNear);
+    float top = std::tan(fovY / 2) * std::abs(zNear);
     float right = aspect_ratio * top;
     float bottom = -top;
     float left = -right;
@@ -68,10 +73,16 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
                 0, 2/(top-bottom),0,0,
                 0,0,2/(zNear-zFar),0,
                 0,0,0,1;
+    Eigen::Matrix4f M_ortho_translate;
+    M_ortho_translate << 1,0,0, -(right+left)/2,
+                        0,1,0, -(top+bottom)/2,
+                        0,0,1, -(zNear+zFar)/2,
+                        0,0,0,1;
 
-    projection = M_ortho * M_persp2ortho;
+    projection = M_ortho * M_ortho_translate * M_persp2ortho;
 
     return projection;
+
 }
 
 int main(int argc, const char** argv)
