@@ -33,34 +33,41 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
     // TODO: Copy-paste your implementation from the previous assignment.
     Eigen::Matrix4f projection;
 
-    zNear = -zNear;
-    zFar = -zFar;
-
-    Eigen::Matrix4f M_persp2ortho;
-    M_persp2ortho << zNear, 0,0,0,
-                        0, zNear,0,0,
-                        0,0,zNear+zFar, -zNear*zFar,
-                        0,0,1,0;
 
     // // 假定eye_fov为fovY
     float fovY = eye_fov / 180 * MY_PI;
-    float top = std::tan(fovY / 2) * std::abs(zNear);
-    float right = aspect_ratio * top;
-    float bottom = -top;
-    float left = -right;
+    float t = std::tan(fovY / 2) * std::abs(zNear);
+    float r = aspect_ratio * t;
+    float b = -t;
+    float l = -r;
+    float n = zNear;
+    float f = zFar;
 
-    Eigen::Matrix4f M_ortho;
-    M_ortho << 2/(right-left), 0,0,0,
-                0, 2/(top-bottom),0,0,
-                0,0,2/(zNear-zFar),0,
-                0,0,0,1;
-    Eigen::Matrix4f M_ortho_translate;
-    M_ortho_translate << 1,0,0, -(right+left)/2,
-                        0,1,0, -(top+bottom)/2,
-                        0,0,1, -(zNear+zFar)/2,
+    Eigen::Matrix4f M_ortho_corner;
+    M_ortho_corner << 1,0,0, -l,
+                        0,1,0,-b,
+                        0,0,1,n,
                         0,0,0,1;
 
-    projection = M_ortho * M_ortho_translate * M_persp2ortho;
+    Eigen::Matrix4f M_ortho_scale;
+    M_ortho_scale << 2/(r-l),0,0,0,
+                    0,2/(t-b),0,0,
+                    0,0,2/(n-f),0,
+                    0,0,0,1;
+    
+    Eigen::Matrix4f M_ortho_center;
+    M_ortho_center << 1,0,0,-1,
+                        0,1,0,-1,
+                        0,0,1,-1,
+                        0,0,0,1;
+
+    Eigen::Matrix4f M_persp2ortho;
+    M_persp2ortho << -zNear,0,0,0,
+                    0,-zNear,0,0,
+                    0,0,-(zNear+zFar), -zNear*zFar,
+                    0,0,1,0;
+
+    projection = M_ortho_center * M_ortho_scale * M_ortho_corner * M_persp2ortho;
 
     return projection;
 }
