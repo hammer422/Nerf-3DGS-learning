@@ -230,7 +230,20 @@ void Renderer::Render(const Scene& scene)
             // Also, don't forget to multiply both of them with the variable *scale*, and
             // x (horizontal) variable with the *imageAspectRatio*            
 
+            // refer: https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html
+
+
+            float x_ndc = (float(i)+0.5) / scene.width;
+            float y_ndc = (float(j)+0.5) / scene.height;
+
+            float x_screen = (2 * x_ndc - 1) * imageAspectRatio * scale;
+            float y_screen = (1. - 2 * y_ndc) * scale;
+
+            x = x_screen;
+            y = y_screen;
+            
             Vector3f dir = Vector3f(x, y, -1); // Don't forget to normalize this direction!
+            dir = normalize(dir);
             framebuffer[m++] = castRay(eye_pos, dir, scene, 0);
         }
         UpdateProgress(j / (float)scene.height);
