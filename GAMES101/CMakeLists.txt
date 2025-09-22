@@ -9,3 +9,5 @@ add_subdirectory("pa3/")
 add_subdirectory("pa4/")
 add_subdirectory("pa5/")
 add_subdirectory("pa6/")
+
+add_subdirectory("pa8/")
