@@ -1,3 +1,6 @@
 nerf/logs/
 3dgs/logs/
 GAMES101/build/
+democuda/square-op/build/
+democuda/square-op/democuda.egg-info/
+democuda/square-op/squareCUDA.egg-info/
